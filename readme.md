@@ -4,3 +4,10 @@ Scrape.py gets word lists from https://www.thefreedictionary.com/ and stores it 
 
 ## The game in CLI
 Running wordle.py starts the wordle game
+
+## The game in html
+Running app.py starts the wordle game in localhost:5000
+
+## TODO
+- Make gui more pretty
+- Try maintaing a server
