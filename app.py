@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 from wordle import Wordle
 from datetime import datetime
+
 app = Flask(__name__)
 app.secret_key = 'whatisthekey??'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///words.sqlite"
