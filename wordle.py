@@ -10,25 +10,6 @@ def GetWordsFromFile(file_directory: str) -> list:
             words.append(line.rstrip())
     return words
 
-# Gets 5-Letter Input from user
-def GetFiveLetterInput(tries: int, words: str) -> str:
-    print(f"Input 5-letter word to Guess (#{tries} guess): ")
-
-    while True:
-        user_input = input().strip()
-
-        if len(user_input) != 5:
-            print("Word isn't 5-letters!")
-            continue
-
-        if not user_input.isalpha():
-            print("Word contains non-alphabetical letter!")
-            continue
-
-        if user_input not in words:
-            print("Not a valid 5-letter word!")
-            continue
-        return user_input
 
 # check target and current input word, returns string to indicate if each letter is in the word, is in the correct position, or is not in the word
 def DetermineCorrectAlphabet(target: str, cur_word: str) -> str:
@@ -52,46 +33,85 @@ def DetermineCorrectAlphabet(target: str, cur_word: str) -> str:
     
     return return_word
 
+class Wordle():
+    def __init__(self) -> None:
+        # Get words from file
+        self.words = GetWordsFromFile('words.txt')
 
+        # create Random() object
+        self.rand = Random()
+
+        self.target_word = None
+        self.tries = 1
+
+    # Reset game
+    def ResetWordleGame(self) -> None:
+        self.tries = 1
+        self.ChooseRandomWord()
+
+    # Chooses Random word from words
+    def ChooseRandomWord(self) -> None:
+        self.target_word = self.rand.choice(self.words)
+
+    # Try guess
+    def TryGuess(self, guess: str) -> tuple[str, bool]:
+        self.tries += 1
+        result = DetermineCorrectAlphabet(self.target_word, guess)
+
+        if result == self.target_word:
+            return result, True
+        else:
+            return result, False
+
+    # Gets 5-Letter Input from user
+    def isFiveLetterInput(self, user_input: str) ->bool:
+        if len(user_input) != 5:
+            print("Word isn't 5-letters!")
+            return False
+
+        if not user_input.isalpha():
+            print("Word contains non-alphabetical letter!")
+            return False
+
+        if user_input not in self.words:
+            print("Not a valid 5-letter word!")
+            return False
+
+        return True
 
 if __name__ == '__main__':
-
-    # Get words from file
-    words = GetWordsFromFile('words.txt')
-
-    # create Random() object
-    rand = Random()
-
-    # start game
+    # create wordle object
+    wordle = Wordle()
     while True:
-        # choose random word
-        target_word = rand.choice(words)
-        success = False
-        num_of_tries = 0
+        # Init Game
+        finished = False
+        wordle.ResetWordleGame()
+
         # loop for number of tries
         for tries in range(6):
             # get input
-            user_input = GetFiveLetterInput(tries+1, words)
+            print(f"Input 5-letter word to Guess (#{wordle.tries} guess): ")
+            user_input = input().strip()
+
+            while(not wordle.isFiveLetterInput(user_input)):
+                user_input = input().strip()
 
             # calculate how many are correct
-            result = DetermineCorrectAlphabet(target_word, user_input)
+            result, finished = wordle.TryGuess(user_input)
             print(f'Results: \n{result}')
 
-            # determine if word is correct
-            if result == target_word:
-                success = True
-                num_of_tries = tries
+            if finished:
                 break
-        
+               
         # guessed correct word below 6 tries
-        if success:
-            print("Congrats! You got it write in ")
+        if finished:
+            print(f"Congrats! You got it right in {wordle.tries} tries!")
         else:
             print("You couldn't guess in 6 tries...")
-            print(f"The correct word was {target_word}")
+            print(f"The correct word was {wordle.target_word}")
 
         # process input for quit
-        print("input q to quit")
+        print("input q to quit or anything else to play again")
 
         inp = input().strip()
         if inp == 'q':

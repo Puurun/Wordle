@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block body %}
+The word was: {{ target_word }}
+<form action="/" method="GET">
+    <input type="submit" value="play again">
+</form>
+{% endblock %}

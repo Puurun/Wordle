@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container">
+    {% for word in words %} 
+        {% for i in range(5) %}
+            <div class="box {{AssignColor(word.result[i])}}">
+                <div class="box_text">{{word.word[i]}}</div>
+            </div>
+        {% endfor %}
+        <br>
+    {% endfor %}
+    <br>
+
+    <form action="/guess" method="POST">
+        <input type="text" name="user_input" id="user_input">
+        <input type="submit" value="Guess!">
+    </form>
+
+    <div>
+        {{ status }}
+    </div>
+</div>
+{% endblock %}
